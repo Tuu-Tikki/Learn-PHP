@@ -4,8 +4,8 @@
     echo "Connection failed: " . $conn->connect_error . "</br>";
   }
   else {
-    $username = htmlspecialchars($_POST["username"]) ? htmlspecialchars($_POST["username"]) : htmlspecialchars($_POST["username_to_register"]);
-    $password = htmlspecialchars($_POST["password"]) ? htmlspecialchars($_POST["password"]) : htmlspecialchars($_POST["password_to_register"]);
+    $username = $_SESSION["username"] ? $_SESSION["username"] : $_SESSION["username_to_register"];
+    $password = $_SESSION["password"] ? $_SESSION["password"] : $_SESSION["password_to_register"];
 
     $sql = "SELECT ID FROM users WHERE Username='" . $username . "' AND Password='" . $password . "'";
     $result = $conn->query($sql);
@@ -27,11 +27,10 @@
     else {
       if($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) {
-          echo "Date: " . $row["Date"] . " | Time: " . $row["Time"] . " | Blood Pressure: " . $row["Systolic"] . "/" . $row["Diastolic"] . "</br>";
+          echo "<p>Date: " . $row["Date"] . " | Time: " . $row["Time"] . " | Blood Pressure: " . $row["Systolic"] . "/" . $row["Diastolic"] . "</p></br>";
         }
       }
     }
-
 
     $conn->close();
   }

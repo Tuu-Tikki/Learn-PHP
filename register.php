@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -7,16 +11,29 @@
 
   <body>
     <?php
+      if(!array_key_exists("username_to_register", $_SESSION)) {
+        $_SESSION["username_to_register"] = htmlspecialchars($_POST["username_to_register"]);
+      }
+      if(!array_key_exists("password_to_register", $_SESSION)) {
+        $_SESSION["password_to_register"] = htmlspecialchars($_POST["password_to_register"]);
+      }
+      if(!array_key_exists("firstname", $_SESSION)) {
+        $_SESSION["firstname"] = htmlspecialchars($_POST["firstname"]);
+      }
+      if(!array_key_exists("lastname", $_SESSION)) {
+        $_SESSION["lastname"] = htmlspecialchars($_POST["lastname"]);
+      }
+
       $conn = new mysqli("localhost", "root", "", "blood_pressure_diary");
       if($conn->connect_errno) {
         echo "Connection failed: " . $conn->connect_error;
       }
       else {
         $sql = "INSERT INTO users (FirstName, LastName, Username, Password) VALUES("
-          . "'" . htmlspecialchars($_POST["firstname"]) . "', "
-          . "'" . htmlspecialchars($_POST["lastname"]) . "', "
-          . "'" . htmlspecialchars($_POST["username_to_register"]) . "', "
-          . "'" . htmlspecialchars($_POST["password_to_register"]). "')";
+          . "'" . $_SESSION["firstname"] . "', "
+          . "'" . $_SESSION["lastname"] . "', "
+          . "'" . $_SESSION["username_to_register"] . "', "
+          . "'" . $_SESSION["password_to_register"] . "')";
 
         $conn->query($sql);
         
@@ -24,8 +41,8 @@
           echo "Error: " . $conn->error;
         }
         else {
-          echo "Welcome " . htmlspecialchars($_POST["firstname"]) . " " . htmlspecialchars($_POST["lastname"]) . "!</br>";
-          echo "You are successfully registered! </br>";
+          echo "<p>Welcome " . $_SESSION["firstname"] . " " . $_SESSION["lastname"] . "!</p>";
+          echo "<p>You are successfully registered!</p>";
         }
 
         $conn->close();
